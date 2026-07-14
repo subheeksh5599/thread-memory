@@ -20,8 +20,8 @@ function Nav() {
         <div className="flex items-center gap-4">
           <a href="#features" className="font-outfit text-sm font-medium text-muted hover:text-dark transition-colors">Features</a>
           <a href="#faq" className="font-outfit text-sm font-medium text-muted hover:text-dark transition-colors">FAQ</a>
-          <a href="#waitlist" className="rounded-full bg-dark px-4 py-2 font-outfit text-sm font-medium text-white hover:scale-105 transition-transform">
-            Join Waitlist
+          <a href="https://github.com/subheeksh5599/thread-memory" target="_blank" rel="noopener noreferrer" className="rounded-full bg-dark px-4 py-2 font-outfit text-sm font-medium text-white hover:scale-105 transition-transform">
+            GitHub
           </a>
         </div>
       </div>
@@ -78,8 +78,8 @@ function Hero() {
         so you never lose a thought again.
       </p>
       <div className="reveal relative z-10 mt-8 flex gap-3">
-        <a href="#waitlist" className="rounded-full bg-coral px-8 py-3.5 font-outfit font-semibold text-dark shadow-[0_4px_20px_-2px_rgba(0,0,0,0.05)] hover:scale-105 transition-transform">
-          Get Early Access
+        <a href="https://github.com/subheeksh5599/thread-memory" target="_blank" rel="noopener noreferrer" className="rounded-full bg-coral px-8 py-3.5 font-outfit font-semibold text-dark shadow-[0_4px_20px_-2px_rgba(0,0,0,0.05)] hover:scale-105 transition-transform">
+          View on GitHub
         </a>
         <a href="#features" className="rounded-full border border-stone-200 bg-white px-8 py-3.5 font-outfit font-semibold text-dark hover:scale-105 transition-transform">
           How it Works
@@ -120,7 +120,7 @@ function HorizontalCards() {
         Everything you touch, <span className="font-reenie text-coral text-[40px]">remembered</span>
       </h2>
       <p className="mb-10 text-center font-outfit text-muted">Scroll to see threads from your day</p>
-      <div ref={scrollRef} className="flex gap-4 overflow-x-auto pb-4 -mx-6 px-6 snap-x snap-mandatory scrollbar-hide" style={{ scrollbarWidth: 'none' }}>
+      <div ref={scrollRef} className="flex gap-4 overflow-x-auto pb-4 -mx-6 px-6 snap-x snap-mandatory" style={{ scrollbarWidth: 'none' }}>
         {CARDS.map((card, i) => (
           <div
             key={i}
@@ -195,35 +195,6 @@ function AppPreview() {
   )
 }
 
-// ── Testimonials ─────────────────────────────────────
-const TESTIMONIALS = [
-  { text: '"I stopped losing context between sessions. Thread remembers which API I was debugging last Tuesday."', author: 'Sarah Chen' },
-  { text: '"Finally, my terminal history actually helps me. Thread connected a deploy error to a config change I made 3 days ago."', author: 'Marcus Rivera' },
-]
-
-function Testimonials() {
-  return (
-    <section className="py-24 px-6">
-      <h2 className="mb-10 font-outfit text-[32px] font-bold tracking-[-0.025em] text-dark text-center">
-        What early users <span className="font-reenie text-coral text-[40px]">say</span>
-      </h2>
-      <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-        {TESTIMONIALS.map((t, i) => (
-          <div
-            key={i}
-            className="bg-white rounded-[24px] p-8 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.05)] border border-stone-100"
-            style={{ transform: `rotate(${i === 0 ? 1 : -1}deg)` }}
-          >
-            <p className="font-outfit text-stone-800 leading-relaxed mb-6">{t.text}</p>
-            <div className="w-8 h-[2px] bg-stone-300 mb-2" />
-            <span className="font-reenie text-2xl text-stone-500">{t.author}</span>
-          </div>
-        ))}
-      </div>
-    </section>
-  )
-}
-
 // ── FAQ ──────────────────────────────────────────────
 const FAQS = [
   { q: 'What does Thread watch?', a: 'Thread connects to your browser history, terminal commands, and recently edited files. Everything stays local — your data never leaves your machine until you explicitly sync it to Supermemory.' },
@@ -262,16 +233,10 @@ function FAQ() {
   )
 }
 
-// ── Waitlist ─────────────────────────────────────────
-function Waitlist() {
-  const [email, setEmail] = useState('')
-  const [submitted, setSubmitted] = useState(false)
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (email) setSubmitted(true)
-  }
+// ── GitHub CTA ───────────────────────────────────────
+function GitHubCTA() {
   return (
-    <section id="waitlist" className="relative py-32 px-6 overflow-hidden">
+    <section id="github" className="relative py-32 px-6 overflow-hidden">
       <Blob color="#FFE4E1" x="20%" y="10%" scale={0.8} />
       <Blob color="#EFEDF4" x="60%" y="60%" scale={0.6} />
       <div className="relative z-10 max-w-lg mx-auto text-center">
@@ -279,31 +244,20 @@ function Waitlist() {
           <div className="h-2.5 w-2.5 rounded-full bg-coral" />
         </div>
         <h2 className="font-outfit text-[40px] font-bold tracking-[-0.025em] text-dark mb-4">
-          Never lose a thread
+          Open source & local-first
         </h2>
         <p className="font-outfit text-muted mb-8">
-          Join the waitlist. First 100 users get free access.
+          Thread is fully open source. Star the repo, fork it, build on it.
         </p>
-        {submitted ? (
-          <p className="font-outfit text-coral font-semibold text-lg">You're on the list! 🧵</p>
-        ) : (
-          <form onSubmit={handleSubmit} className="flex gap-3 max-w-md mx-auto">
-            <input
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="your@email.com"
-              className="flex-1 rounded-full bg-stone-50 border border-stone-200 px-6 py-3.5 font-outfit text-dark placeholder:text-stone-400 focus:outline-none focus:border-coral"
-              required
-            />
-            <button
-              type="submit"
-              className="rounded-full bg-dark px-8 py-3.5 font-outfit font-semibold text-white hover:scale-105 transition-transform"
-            >
-              Join
-            </button>
-          </form>
-        )}
+        <a
+          href="https://github.com/subheeksh5599/thread-memory"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 rounded-full bg-dark px-8 py-4 font-outfit font-semibold text-white hover:scale-105 transition-transform"
+        >
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          View on GitHub →
+        </a>
       </div>
     </section>
   )
@@ -345,9 +299,8 @@ export default function App() {
         <Hero />
         <HorizontalCards />
         <AppPreview />
-        <Testimonials />
         <FAQ />
-        <Waitlist />
+        <GitHubCTA />
       </main>
       <Footer />
     </div>

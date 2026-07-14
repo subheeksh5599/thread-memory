@@ -1,4 +1,4 @@
-supermemory>=4.0.0
+supermemory>=3.50.0
 fastapi>=0.100.0
 uvicorn>=0.23.0
 watchdog>=3.0.0
