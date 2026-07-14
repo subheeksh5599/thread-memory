@@ -31,8 +31,7 @@ class MemoryClient:
         its source type (browser/terminal/file) so search results
         are traceable.
         """
-        tag = f"{config.CONTAINER_TAG}/{source}"
-
+        # Source is tracked via metadata, not via container tag separator
         metadata = {"source": source, "ingested_at": datetime.now(timezone.utc).isoformat()}
         if url:
             metadata["url"] = url
@@ -40,7 +39,8 @@ class MemoryClient:
         try:
             result = self.sm.add(
                 content=content,
-                container_tag=tag,
+                container_tag=config.CONTAINER_TAG,
+                metadata=metadata,
             )
             logger.info(f"Ingested {source}: {content[:80]}...")
             return {"status": "ok", "source": source, "result": result}
@@ -57,6 +57,7 @@ class MemoryClient:
                 q=query,
                 container_tag=config.CONTAINER_TAG,
                 limit=limit,
+                search_mode="hybrid",
             )
             # Response is SearchMemoriesResponse with .results list
             hits = []
