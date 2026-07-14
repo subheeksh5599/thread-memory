@@ -60,6 +60,9 @@ async def profile(q: str = Query("", description="Contextual query")):
 async def ingest(content: str, source: str = "manual", url: str = ""):
     """Manually ingest content into the memory vault."""
     result = memory.ingest(content=content, source=source, url=url)
+    # Convert AddResponse to dict if needed
+    if "result" in result and hasattr(result["result"], "id"):
+        result["result"] = {"id": result["result"].id, "status": result["result"].status}
     return JSONResponse(result)
 
 
