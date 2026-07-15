@@ -8,7 +8,7 @@ from ..config import config
 
 # Shell internals that provide zero value as memories
 _SKIP_PATTERNS = [
-    re.compile(r"^set\s+[+-]o\s+\w+$"),      # set +o noclobber, set -o emacs, etc.
+    re.compile(r"^set\s+[+-]o\s+[\w-]+$"),     # set +o noclobber, set -o interactive-comments
     re.compile(r"^:\s+\d+:\d+;"),             # zsh timestamp markers like ": 1780683784:0;"
     re.compile(r"^:\s+\d+;"),                  # shorter zsh timestamps
     re.compile(r"^bindkey\s"),                 # keybinding config
@@ -24,6 +24,24 @@ _SKIP_PATTERNS = [
 
 # Commands too short to be meaningful (with no arguments)
 _SHORT_NOISE = {"ls", "cd", "pwd", "clear", "exit", "whoami", "date", "echo", "true", "false"}
+
+# Common system commands — single-word inputs not in this set are likely typos/usernames
+_KNOWN_COMMANDS = {
+    "git", "npm", "yarn", "pnpm", "pip", "python", "python3", "node",
+    "curl", "wget", "docker", "docker-compose", "kubectl", "ssh", "scp",
+    "rsync", "make", "cargo", "go", "rustc", "javac", "gcc", "g++",
+    "systemctl", "journalctl", "nvim", "vim", "code", "nvim", "nano",
+    "cat", "less", "head", "tail", "grep", "rg", "find", "sed", "awk",
+    "chmod", "chown", "sudo", "su", "apt", "pacman", "brew", "dnf",
+    "crontab", "tmux", "screen", "htop", "top", "ps", "kill", "df",
+    "du", "mount", "umount", "ln", "mv", "cp", "rm", "mkdir", "touch",
+    "tar", "zip", "unzip", "gzip", "gunzip", "ping", "traceroute",
+    "netstat", "ss", "iptables", "ufw", "firewall-cmd",
+    "ffmpeg", "imagemagick", "convert", "pdftk", "pandoc",
+    "heroku", "vercel", "netlify", "fly", "gh", "glab",
+    "terraform", "ansible", "vagrant", "packer",
+    "source", ".", "exec",
+}
 
 
 class TerminalWatcher(BaseWatcher):
@@ -66,9 +84,16 @@ class TerminalWatcher(BaseWatcher):
                 return False
 
         # Skip very short noise commands
-        cmd = line.split()[0] if line.split() else ""
-        if cmd in _SHORT_NOISE and len(line.split()) <= 2:
+        tokens = line.split()
+        cmd = tokens[0] if tokens else ""
+        if cmd in _SHORT_NOISE and len(tokens) <= 2:
             return False
+
+        # Single-word input that's not a known command = likely typo/username
+        # Exception: script paths (./script.sh, /usr/bin/foo, ~/bin/bar)
+        if len(tokens) == 1 and cmd not in _KNOWN_COMMANDS:
+            if not (cmd.startswith("./") or cmd.startswith("/") or cmd.startswith("~/")):
+                return False
 
         # Must have meaningful content
         return len(line) > 10
